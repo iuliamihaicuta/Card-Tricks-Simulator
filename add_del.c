@@ -45,7 +45,9 @@ get_card_value(dll_node_t *card)
     return card;
 }
 
-void read_cards(uint n)
+// sterge
+void
+read_cards(uint n)
 {
     dll_node_t *card = new_node(sizeof(card_t));
 
