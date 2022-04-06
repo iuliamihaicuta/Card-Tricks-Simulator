@@ -8,7 +8,7 @@
 dll_node_t*
 new_node(uint data_size)
 {
-    dll_node_t *node = (dll_node_t *)malloc(sizeof(*node));
+    dll_node_t *node = (dll_node_t *)malloc(sizeof(dll_node_t));
 
     node->data = malloc(data_size);
 
@@ -34,8 +34,8 @@ dll_node_t *
 dll_get_nth_node(doubly_linked_list_t *l, uint n)
 {
     dll_node_t *tmp = l->head;
-    if (n > l->size)
-        n = l->size;
+    if (n >= l->size)
+        n = l->size - 1;
     
     for(uint i = 0; i < n; ++i)
         tmp = tmp->next;
@@ -49,22 +49,23 @@ dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* data)
     if ( n > list->size)
         n = list->size;
 
-    dll_node_t *node = new_node(sizeof(data));
-    memcpy(node->data, data, sizeof(*data));
+    dll_node_t *node = new_node(list->data_size);
+    memcpy(node->data, data, list->data_size);
 
     if(list->size == 0) {
         list->head = node;
-    } else if(n == 0) {
+    } else if (n == 0) {
         node->next = list->head;
-    
+        list->head->prev = node;
         list->head = node;
     } else {
-        dll_node_t *tmp = dll_get_nth_node(list, n);
+        dll_node_t *tmp = dll_get_nth_node(list, n - 1);
         
-        node->next = tmp;
-        node->prev = tmp->prev;
-        tmp->prev->next = node;
-        tmp->prev = node;
+        node->next = tmp->next;
+        node->prev = tmp;
+        if (tmp->next)
+            tmp->next->prev = node;
+        tmp->next = node;
     }
 
     (list->size)++;
@@ -108,12 +109,12 @@ void
 dll_move_last(doubly_linked_list_t* list, uint n)
 {
     dll_node_t *node = dll_remove_nth_node(list, n);
-    dll_node_t *tail = dll_get_nth_node(list, list->size - 1);
+    dll_node_t *tail = dll_get_nth_node(list, list->size);
 
     node->prev = tail;
     tail->next = node;
-    node->next = list->head;
-    list->head->prev = node;
+    node->next = NULL;
+    //list->head->prev = node;
 
     (list->size)++;
 }
