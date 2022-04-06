@@ -3,7 +3,7 @@
 #include <string.h>
 #include "doubly_linked_list.h"
 
-#define LEN_MAX 10
+#define LEN_MAX 256
 #define uint unsigned int
 
 char
@@ -45,7 +45,9 @@ get_card_value(dll_node_t *card)
     return card;
 }
 
-void read_cards(uint n)
+// sterge
+void
+read_cards(uint n)
 {
     dll_node_t *card = new_node(sizeof(card_t));
 
@@ -75,14 +77,9 @@ add_deck(doubly_linked_list_t *pack)
     ((doubly_linked_list_t *)(new_deck->data))->size = 0;
 
     card = get_card_value(card);
-    if(((card_t *)(card->data))->value == 15) {
-        read_cards(nr_cards - 1);
+    while(((card_t *)(card->data))->value == 15) {
+        card = get_card_value(card);
         printf("The provided card is not a valid one.\n");
-        dll_free_list((doubly_linked_list_t **)(&(new_deck->data)));
-        free(new_deck);
-        free(card->data);
-        free(card);
-        return pack;
     }
     ++(((doubly_linked_list_t *)(new_deck->data))->size);
     ((doubly_linked_list_t *)(new_deck->data))->head = card;
@@ -92,11 +89,8 @@ add_deck(doubly_linked_list_t *pack)
         dll_node_t *new_card = new_node(sizeof(card_t));
         new_card = get_card_value(new_card);
         if(((card_t *)(new_card->data))->value == 15) {
-            read_cards(nr_cards - i - 2);
+            new_card = get_card_value(new_card);
             printf("The provided card is not a valid one.\n");
-            dll_free_list((doubly_linked_list_t **)(&(new_deck->data)));
-            free(new_card);
-            return pack;
         }
 
         card->next = new_card;
@@ -125,7 +119,16 @@ void
 del_deck(doubly_linked_list_t *pack, uint verif)
 {
     uint deck_index;
-    scanf("%d", &deck_index);
+    if (verif == 0) {
+        scanf("%d", &deck_index);
+
+        if(deck_index >= pack->size) {
+            printf("The provided index is out of bounds for the deck list.\n");
+            return;
+        }
+    } else {
+        deck_index = verif;
+    }
 
     dll_node_t *deck = dll_remove_nth_node(pack, deck_index);
     dll_free_list((doubly_linked_list_t **)(&(deck->data)));
@@ -144,15 +147,27 @@ del_card(doubly_linked_list_t *pack)
     uint deck_index, card_index;
     scanf("%d%d", &deck_index, &card_index);
     
+    if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
+    
     doubly_linked_list_t *deck = 
         ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
-    dll_node_t *card = dll_remove_nth_node(deck, card_index);
 
-    free(card->data);
-    free(card);
+    if(card_index >= deck->size) {
+        printf("The provided index is out of bounds for deck %d.\n", deck_index);
+        return;
+    }
 
-    if(deck->size == 0)
-        del_deck(pack, 1);
+    if(deck->size == 1) {
+        del_deck(pack, deck_index);
+    } else {
+        dll_node_t *card = dll_remove_nth_node(deck, card_index);
+
+        free(card->data);
+        free(card);
+    }
 
     printf("The card was successfully deleted from deck %d.\n", deck_index);
 }
@@ -162,6 +177,11 @@ add_cards(doubly_linked_list_t *pack)
 {
     uint deck_index, nr_cards;
     scanf("%d%d", &deck_index, &nr_cards);
+
+    if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
     
     doubly_linked_list_t *deck = 
         ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));

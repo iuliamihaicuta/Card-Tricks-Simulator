@@ -12,6 +12,11 @@ shuffle_deck(doubly_linked_list_t *pack)
 {
 	uint deck_index;
 	scanf("%d", &deck_index);
+
+	if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
 	
 	doubly_linked_list_t *deck = 
 	    ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
@@ -37,66 +42,68 @@ reverse_deck(doubly_linked_list_t *pack)
 	uint deck_index;
 	scanf("%d", &deck_index);
 
+	if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
+
 	doubly_linked_list_t *deck = 
 	    ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
 
-	if(deck->size < 2)
-	return;
-
-	dll_node_t *node = deck->head;
-	for(uint i = 1; i < deck->size; ++i) {
-        dll_move_last(deck, deck->size - 1 - i);
-        node = node->next;
-	}
+	if(deck->size >= 2)
+		for(uint i = 1; i < deck->size; ++i)
+			dll_move_last(deck, deck->size - 1 - i);
 
 	printf("The deck %d was successfully reversed.\n", deck_index);
 }
 
-// TO DO
 void
 merge_decks(doubly_linked_list_t *pack)
 {
 	uint deck_index1, deck_index2;
 	scanf("%d%d", &deck_index1, &deck_index2);
 
+	if(deck_index1 >= pack->size || deck_index2 >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
+
 	dll_node_t *deck1 = dll_remove_nth_node(pack, deck_index1);
-	dll_node_t *deck2 = dll_remove_nth_node(pack, deck_index2 - 1);
+	dll_node_t *deck2;
 
-	dll_node_t *new_deck = new_node(sizeof(doubly_linked_list_t));
-	new_deck->data = dll_create(sizeof(card_t));
+	if(deck_index1 < deck_index2)
+		deck2 = dll_remove_nth_node(pack, deck_index2 - 1);
+	else 
+		deck2 = dll_remove_nth_node(pack, deck_index2);
 
-	uint size1 = ((doubly_linked_list_t *)(deck1->data))->size;
-	uint size2 = ((doubly_linked_list_t *)(deck2->data))->size;
-	uint min_size = MIN(size1, size2);
+	doubly_linked_list_t *new_deck = dll_create(sizeof(card_t));
 
     dll_node_t *card1 = ((doubly_linked_list_t *)(deck1->data))->head;
     dll_node_t *card2 = ((doubly_linked_list_t *)(deck2->data))->head;
 
-	for(uint i = 0; i < min_size; ++i) {
-        dll_add_nth_node(((doubly_linked_list_t *)(new_deck->data)), 2 * min_size, card1->data);
-        card1 = card1->next;
-
-        dll_add_nth_node(((doubly_linked_list_t *)(new_deck->data)), 2 * min_size, card2->data);
-        card2 = card2->next;
-    }
-
-	if (size1 < size2) {
-		while(card2 != NULL) {
-			dll_add_nth_node(((doubly_linked_list_t *)(new_deck->data)), 2 * min_size, card2->data);
-        	card2 = card2->next;
+	while (card1 || card2) {
+		if (card1 != NULL) {
+			dll_add_nth_node(new_deck, new_deck->size, card1->data);
+			card1 = card1->next;
 		}
-	} else if (size2 < size1) {
-		while(card1 != NULL) {
-			dll_add_nth_node(((doubly_linked_list_t *)(new_deck->data)), 2 * min_size, card1->data);
-        	card1 = card1->next;
+
+		if (card2 != NULL) {
+			dll_add_nth_node(new_deck, new_deck->size, card2->data);
+			card2 = card2->next;
 		}
+
 	}
 
-	// dll_free_list(((doubly_linked_list_t *)(deck1->data)));
-	// free(deck1);
+	dll_free_list((doubly_linked_list_t **)(&(deck1->data)));
+	free(deck1);
 
-	// dll_free_list(((doubly_linked_list_t *)(deck2->data)));
-	// free(deck2);
+	dll_free_list((doubly_linked_list_t **)(&(deck2->data)));
+	free(deck2);
+
+	dll_add_nth_node(pack, pack->size, new_deck);
+	free(new_deck);
+
+	printf("The deck %d and the deck %d were successfully merged.\n", deck_index1, deck_index2);
 }
 
 void
@@ -104,6 +111,11 @@ deck_len(doubly_linked_list_t *pack)
 {
 	uint deck_index;
 	scanf("%d", &deck_index);
+
+	if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
 	
 	doubly_linked_list_t *deck = 
 	    ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
@@ -117,8 +129,14 @@ split_deck(doubly_linked_list_t *pack)
 	uint deck_index, split_index;
 	scanf("%d%d", &deck_index, &split_index);
 
-    if(pack->size <= deck_index) {
-    	return;
+    if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
+
+	if(split_index == 0) {
+		printf("The deck %d was successfully split by index %d.\n", deck_index, split_index);
+		return;
 	}
 	
 	dll_node_t *deck = dll_get_nth_node(pack, deck_index);
@@ -155,6 +173,11 @@ sort_deck(doubly_linked_list_t *pack)
 {
 	uint deck_index;
 	scanf("%d", &deck_index);
+
+	if(deck_index >= pack->size) {
+        printf("The provided index is out of bounds for the deck list.\n");
+        return;
+    }
 
 	doubly_linked_list_t *deck = 
 	((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));

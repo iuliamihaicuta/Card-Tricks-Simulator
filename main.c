@@ -6,7 +6,7 @@
 #include "show.h"
 #include "operation.h"
 
-#define LEN_MAX 10
+#define LEN_MAX 256
 #define uint unsigned int
 
 int main()
