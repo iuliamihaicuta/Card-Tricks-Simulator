@@ -6,18 +6,40 @@
 #define LEN_MAX 256
 #define uint unsigned int
 
-char
-validate_command()
+int
+validate_command(uint nr_arg, uint *idx1, uint *idx2)
 {
-    char c, ok = 0;
-    scanf("%c", &c);
+    char line[LEN_MAX];
+    fgets(line, LEN_MAX, stdin);
 
-    while(c != '\n') {
-        if(c != ' ')
-            ok = 1;
-        scanf("%c", &c);
-    }
-    return ok;
+    line[strlen(line) - 1] = '\0';
+
+    char *buff;
+    buff = strtok(line, " ");
+    if(buff == NULL) {
+        if(nr_arg == 0)
+            return 1;
+        return 0;
+    } else if(nr_arg == 0)
+        return 0;
+
+    *idx1 = atoi(buff);
+
+    buff = strtok(NULL, " ");
+    if(buff == NULL) {
+        if(nr_arg == 1)
+            return 1;
+        return 0;
+    } else if(nr_arg == 1)
+        return 0;
+
+    *idx2 = atoi(buff);
+
+    buff = strtok(NULL, " ");
+        if(buff != NULL)
+            return 0;
+
+    return 1;
 }
 
 dll_node_t*
@@ -45,27 +67,13 @@ get_card_value(dll_node_t *card)
     return card;
 }
 
-// sterge
-void
-read_cards(uint n)
-{
-    dll_node_t *card = new_node(sizeof(card_t));
-
-    for(uint i = 0; i < n; ++i)
-        card = get_card_value(card);
-
-    free(card->data);
-    free(card);
-}
-
 doubly_linked_list_t *
 add_deck(doubly_linked_list_t *pack)
 {
-    uint nr_cards;
-    scanf("%d", &nr_cards);
+    uint nr_cards, buff;
 
-    if(validate_command() != 0) {
-        printf("Invalid command\n");
+    if(validate_command(1, &nr_cards, &buff) == 0) {
+        printf("Invalid command. Please try again.\n");
         return pack;
     }
     
@@ -88,7 +96,7 @@ add_deck(doubly_linked_list_t *pack)
 
         dll_node_t *new_card = new_node(sizeof(card_t));
         new_card = get_card_value(new_card);
-        if(((card_t *)(new_card->data))->value == 15) {
+        while(((card_t *)(new_card->data))->value == 15) {
             new_card = get_card_value(new_card);
             printf("The provided card is not a valid one.\n");
         }
@@ -116,18 +124,19 @@ add_deck(doubly_linked_list_t *pack)
 }
 
 void
-del_deck(doubly_linked_list_t *pack, uint verif)
+del_deck(doubly_linked_list_t *pack, uint verif, uint deck_index)
 {
-    uint deck_index;
     if (verif == 0) {
-        scanf("%d", &deck_index);
+        uint buff;
+        if(validate_command(1, &deck_index, &buff) == 0) {
+            printf("Invalid command. Please try again.\n");
+            return;
+        }
 
         if(deck_index >= pack->size) {
             printf("The provided index is out of bounds for the deck list.\n");
             return;
         }
-    } else {
-        deck_index = verif;
     }
 
     dll_node_t *deck = dll_remove_nth_node(pack, deck_index);
@@ -145,8 +154,11 @@ void
 del_card(doubly_linked_list_t *pack)
 {
     uint deck_index, card_index;
-    scanf("%d%d", &deck_index, &card_index);
-    
+    if(validate_command(2, &deck_index, &card_index) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
+
     if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
         return;
@@ -161,7 +173,7 @@ del_card(doubly_linked_list_t *pack)
     }
 
     if(deck->size == 1) {
-        del_deck(pack, deck_index);
+        del_deck(pack, 1, deck_index);
     } else {
         dll_node_t *card = dll_remove_nth_node(deck, card_index);
 
@@ -176,7 +188,10 @@ void
 add_cards(doubly_linked_list_t *pack)
 {
     uint deck_index, nr_cards;
-    scanf("%d%d", &deck_index, &nr_cards);
+    if(validate_command(2, &deck_index, &nr_cards) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
     if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -191,6 +206,11 @@ add_cards(doubly_linked_list_t *pack)
     for(uint i = 0; i < nr_cards; ++i) {
         dll_node_t *new_card = new_node(sizeof(card_t));
         new_card = get_card_value(new_card);
+
+        while(((card_t *)(new_card->data))->value == 15) {
+            new_card = get_card_value(new_card);
+            printf("The provided card is not a valid one.\n");
+        }
 
         card->next = new_card;
         new_card->prev = card;

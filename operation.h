@@ -17,6 +17,9 @@ void
 deck_len(doubly_linked_list_t *pack);
 
 void
+deck_number(doubly_linked_list_t *pack);
+
+void
 free_pack(doubly_linked_list_t **pack);
 
 void

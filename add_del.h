@@ -4,14 +4,14 @@
 
 #define uint unsigned int
 
-dll_node_t*
-get_card_value(dll_node_t *card);
+int
+validate_command(uint nr_arg, uint *idx1, uint *idx2);
 
 doubly_linked_list_t *
 add_deck(doubly_linked_list_t *pack);
 
 void
-del_deck(doubly_linked_list_t *pack, uint verif);
+del_deck(doubly_linked_list_t *pack, uint verif, uint deck_index);
 
 void
 del_card(doubly_linked_list_t *pack);

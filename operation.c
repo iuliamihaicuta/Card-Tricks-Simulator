@@ -10,8 +10,11 @@
 void
 shuffle_deck(doubly_linked_list_t *pack)
 {
-	uint deck_index;
-	scanf("%d", &deck_index);
+	uint deck_index, buff;
+	if(validate_command(1, &deck_index, &buff) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
 	if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -20,6 +23,11 @@ shuffle_deck(doubly_linked_list_t *pack)
 	
 	doubly_linked_list_t *deck = 
 	    ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
+
+	if(deck->size < 2) {
+		printf("The deck %d was successfully shuffled.\n", deck_index);
+		return;
+	}
 
 	dll_node_t *node = deck->head;
 	dll_node_t *tail = dll_get_nth_node(deck, deck->size - 1);
@@ -39,8 +47,11 @@ shuffle_deck(doubly_linked_list_t *pack)
 void
 reverse_deck(doubly_linked_list_t *pack)
 {
-	uint deck_index;
-	scanf("%d", &deck_index);
+	uint deck_index, buff;
+	if(validate_command(1, &deck_index, &buff) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
 	if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -61,7 +72,10 @@ void
 merge_decks(doubly_linked_list_t *pack)
 {
 	uint deck_index1, deck_index2;
-	scanf("%d%d", &deck_index1, &deck_index2);
+    if(validate_command(2, &deck_index1, &deck_index2) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
 	if(deck_index1 >= pack->size || deck_index2 >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -109,8 +123,11 @@ merge_decks(doubly_linked_list_t *pack)
 void
 deck_len(doubly_linked_list_t *pack)
 {
-	uint deck_index;
-	scanf("%d", &deck_index);
+	uint deck_index, buff;
+	if(validate_command(1, &deck_index, &buff) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
 	if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -124,10 +141,25 @@ deck_len(doubly_linked_list_t *pack)
 }
 
 void
+deck_number(doubly_linked_list_t *pack)
+{
+	uint buff1, buff2;
+	if(validate_command(0, &buff1, &buff2) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
+
+	printf("The number of decks is %d.\n", pack->size);
+}
+
+void
 split_deck(doubly_linked_list_t *pack)
 {
 	uint deck_index, split_index;
-	scanf("%d%d", &deck_index, &split_index);
+    if(validate_command(2, &deck_index, &split_index) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
     if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
@@ -171,8 +203,11 @@ split_deck(doubly_linked_list_t *pack)
 void
 sort_deck(doubly_linked_list_t *pack)
 {
-	uint deck_index;
-	scanf("%d", &deck_index);
+	uint deck_index, buff;
+	if(validate_command(1, &deck_index, &buff) == 0) {
+        printf("Invalid command. Please try again.\n");
+        return;
+    }
 
 	if(deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");

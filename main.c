@@ -22,13 +22,13 @@ int main()
         if (strcmp(command, "ADD_DECK") == 0) {
             add_deck(pack);
         } else if (strcmp(command, "DEL_DECK") == 0) {
-            del_deck(pack, 0);
+            del_deck(pack, 0, 0);
         } else if (strcmp(command, "DEL_CARD") == 0) {
             del_card(pack);
         } else if (strcmp(command, "ADD_CARDS") == 0) {
             add_cards(pack);
         } else if (strcmp(command, "DECK_NUMBER") == 0) {
-            printf("The number of decks is %d.\n", pack->size);
+            deck_number(pack);
         } else if (strcmp(command, "DECK_LEN") == 0) {
             deck_len(pack);
         } else if (strcmp(command, "SHUFFLE_DECK") == 0) {
@@ -40,17 +40,18 @@ int main()
         } else if (strcmp(command, "REVERSE_DECK") == 0) {
             reverse_deck(pack);
         } else if (strcmp(command, "SHOW_DECK") == 0) {
-            int index;
-            scanf("%d", &index);
-            show_deck(pack, index);
+            show_deck(pack, 0, 0);
         } else if (strcmp(command, "SHOW_ALL") == 0) {
             show_all(pack);
         } else if (strcmp(command, "EXIT") == 0) {
             verif = 0;
         } else if (strcmp(command, "SORT_DECK") == 0) {
             sort_deck(pack);
-        } else
+        } else {
+            char line[LEN_MAX];
+            fgets(line, LEN_MAX, stdin);
             printf("Invalid command. Please try again.\n");
+        }
     }
 
     free_pack(&pack);
