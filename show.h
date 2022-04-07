@@ -8,7 +8,7 @@ void
 print_symbol(char c);
 
 void
-show_deck(doubly_linked_list_t *pack, uint deck_index);
+show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif);
 
 void
 show_all(doubly_linked_list_t *pack);
