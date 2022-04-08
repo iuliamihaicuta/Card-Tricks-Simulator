@@ -1,3 +1,4 @@
+// Copyright Mihaicuta Iulia-Andreea-Naomi 314CAb 2021-2022
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,11 +10,11 @@
 void
 print_symbol(char c)
 {
-    if(c == 0)
+    if (c == 0)
         printf("CLUB\n");
-    else if(c == 1)
+    else if (c == 1)
         printf("DIAMOND\n");
-    else if(c == 2)
+    else if (c == 2)
         printf("SPADE\n");
     else
         printf("HEART\n");
@@ -22,14 +23,14 @@ print_symbol(char c)
 void
 show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif)
 {
-    if(verif == 0) {
+    if (verif == 0) {
         uint buff;
-        if(validate_command(1, &deck_index, &buff) == 0) {
+        if (validate_command(1, &deck_index, &buff) == 0) {
             printf("Invalid command. Please try again.\n");
             return;
         }
 
-        if(deck_index >= pack->size) {
+        if (deck_index >= pack->size) {
             printf("The provided index is out of bounds for the deck list.\n");
             return;
         }
@@ -51,7 +52,7 @@ void
 show_all(doubly_linked_list_t *pack)
 {
     uint buff1, buff2;
-    if(validate_command(0, &buff1, &buff2) == 0) {
+    if (validate_command(0, &buff1, &buff2) == 0) {
         printf("Invalid command. Please try again.\n");
         return;
     }
