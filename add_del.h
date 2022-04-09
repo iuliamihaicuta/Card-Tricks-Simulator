@@ -1,6 +1,6 @@
 // Copyright Mihaicuta Iulia-Andreea-Naomi 314CAb 2021-2022
-#ifndef ADD_DEL_H_INCLUDED
-#define ADD_DEL_H_INCLUDED
+#ifndef ADD_DEL_H_
+#define ADD_DEL_H_
 
 #define uint unsigned int
 
@@ -19,4 +19,4 @@ del_card(doubly_linked_list_t *pack);
 void
 add_cards(doubly_linked_list_t *pack);
 
-#endif
+#endif  // ADD_DEL_H_

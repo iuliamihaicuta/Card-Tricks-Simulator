@@ -1,3 +1,4 @@
+// Copyright Mihaicuta Iulia-Andreea-Naomi 314CAb 2021-2022
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

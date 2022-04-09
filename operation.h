@@ -1,6 +1,6 @@
 // Copyright Mihaicuta Iulia-Andreea-Naomi 314CAb 2021-2022
-#ifndef OPERATION_H_INCLUDED
-#define OPERATION_H_INCLUDED
+#ifndef OPERATION_H_
+#define OPERATION_H_
 
 #define uint unsigned int
 
@@ -28,4 +28,4 @@ split_deck(doubly_linked_list_t *pack);
 void
 sort_deck(doubly_linked_list_t *pack);
 
-#endif
+#endif  // OPERATION_H_
