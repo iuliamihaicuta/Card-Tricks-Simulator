@@ -1,6 +1,6 @@
 // Copyright Mihaicuta Iulia-Andreea-Naomi 314CAb 2021-2022
-#ifndef DOUBLY_LINKED_LIST_H_INCLUDED
-#define DOUBLY_LINKED_LIST_H_INCLUDED
+#ifndef DOUBLY_LINKED_LIST_H_
+#define DOUBLY_LINKED_LIST_H_
 
 #define uint unsigned int
 
@@ -37,10 +37,10 @@ dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* data);
 dll_node_t*
 dll_remove_nth_node(doubly_linked_list_t* list, uint n);
 
-void 
+void
 dll_free_list(doubly_linked_list_t** pp_list);
 
 void
 dll_move_last(doubly_linked_list_t* list, uint n);
 
-#endif
+#endif  // DOUBLY_LINKED_LIST_H_

@@ -162,7 +162,7 @@ split_deck(doubly_linked_list_t *pack)
         return;
     }
 
-    if (deck_index >= pack->size || deck_index < 0) {
+    if (deck_index >= pack->size) {
         printf("The provided index is out of bounds for the deck list.\n");
         return;
     }
@@ -175,7 +175,7 @@ split_deck(doubly_linked_list_t *pack)
 
 	dll_node_t *deck = dll_get_nth_node(pack, deck_index);
 
-	if(split_index >= ((doubly_linked_list_t *)deck->data)->size || split_index < 0) {
+	if(split_index >= ((doubly_linked_list_t *)deck->data)->size) {
 		printf("The provided index is out of bounds for deck %d.\n", deck_index);
 		return;
 	}
@@ -215,6 +215,27 @@ split_deck(doubly_linked_list_t *pack)
 }
 
 void
+swap_cards(doubly_linked_list_t *deck, uint idx1, uint idx2)
+{
+	dll_node_t *node2 = dll_remove_nth_node(deck, idx2);
+
+	card_t card;
+	memcpy((void *)&card, node2->data, sizeof(card_t));
+
+	dll_node_t *node1 = dll_remove_nth_node(deck, idx1);
+	dll_add_nth_node(deck, idx1, (void *)&card);
+
+	memcpy((void *)&card, node1->data, sizeof(card_t));
+	dll_add_nth_node(deck, idx2, (void *)&card);
+
+	free(node1->data);
+	free(node1);
+
+	free(node2->data);
+	free(node2);
+}
+
+void
 sort_deck(doubly_linked_list_t *pack)
 {
 	uint deck_index, buff;
@@ -235,25 +256,30 @@ sort_deck(doubly_linked_list_t *pack)
 	return;
 
 	dll_node_t *i, *j;
+	uint ii = 0, jj;
 
 	for (i = deck->head; i->next != NULL; i = i->next) {
-	    for (j = i->next; j != NULL; j = j->next) {
-	        if (((card_t *)i->data)->value > ((card_t *)j->data)->value) {
-	            int tmp = ((card_t *)i->data)->value;
-                    ((card_t *)i->data)->value = ((card_t *)j->data)->value;
-                    ((card_t *)j->data)->value = tmp;
-	            }
-	        }
-	    }
-
-	for (i = deck->head; i->next != NULL; i = i->next) {
+		jj = ii;
         for (j = i->next; j != NULL; j = j->next) {
             if (((card_t *)i->data)->symbol > ((card_t *)j->data)->symbol) {
-                int tmp = ((card_t *)i->data)->symbol;
-                ((card_t *)i->data)->symbol = ((card_t *)j->data)->symbol;
-                ((card_t *)j->data)->symbol = tmp;
+                swap_cards(deck, ii, jj);
             }
+			printf("%d %d\n", ii, jj);
+			++jj;
         }
+		++ii;
+	}
+
+	ii = 0;
+	for (i = deck->head; i->next != NULL; i = i->next) {
+		jj = ii;
+	    for (j = i->next; j != NULL; j = j->next) {
+	        if (((card_t *)i->data)->value > ((card_t *)j->data)->value) {
+	            swap_cards(deck, ii, jj);
+	        }
+			++jj;
+	    }
+		++ii;
 	}
 
 	printf("The deck %d was successfully sorted.\n", deck_index);

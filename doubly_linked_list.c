@@ -39,9 +39,6 @@ dll_get_nth_node(doubly_linked_list_t *l, uint n)
 	if (n >= l->size)
 		n = l->size - 1;
 
-	// for (uint i = 0; i < n; ++i)
-	// 	tmp = tmp->next;
-
 	uint i = 0;
 	while(i < n && tmp->next != NULL) {
 		tmp = tmp->next;
@@ -94,10 +91,11 @@ dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 	}
 
 	node = dll_get_nth_node(list, n);
-	
+
 	if(n == 0) {
 		list->head = node->next;
-		node->next->prev == NULL;
+		if(node->next != NULL)
+			node->next->prev = NULL;
 	} else {
 		if(node->prev != NULL)
 			node->prev->next = node->next;
@@ -149,3 +147,4 @@ dll_free_list(doubly_linked_list_t** pp_list)
 	free(*pp_list);
 	*pp_list = NULL;
 }
+

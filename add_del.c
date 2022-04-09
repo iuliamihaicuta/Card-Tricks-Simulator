@@ -45,27 +45,55 @@ validate_command(uint nr_arg, uint *idx1, uint *idx2)
 	return 1;
 }
 
-dll_node_t*
-get_card_value(dll_node_t *card)
+card_t
+get_card_value()
 {
+	card_t card;
 	char symbol[LEN_MAX];
 	int value;
-	scanf("%d%s", &value, symbol);
+
+	char line[LEN_MAX];
+	fgets(line, LEN_MAX, stdin);
+
+	line[strlen(line) - 1] = '\0';
+
+	char *buff;
+	buff = strtok(line, " ");
+	if(buff == NULL) {
+		card.value = 15;
+		return card;
+	}
+	value = atoi(buff);
+
+	buff = strtok(NULL, " ");
+	if(buff == NULL) {
+		card.value = 15;
+		return card;
+	}
+	strcpy(symbol, buff);
+
+	buff = strtok(NULL, " ");
+	if(buff != NULL) {
+		card.value = 15;
+		return card;
+	}
+
+
 	if (value < 0 || value > 14)
 		value = 15;
 
-	((card_t *)(card->data))->value = (uint)value;
+	card.value = (uint)value;
 
 	if (strcmp(symbol, "HEART") == 0)
-		((card_t *)(card->data))->symbol = 3;
+		card.symbol = 3;
 	else if (strcmp(symbol, "SPADE") == 0)
-		((card_t *)(card->data))->symbol = 2;
+		card.symbol = 2;
 	else if (strcmp(symbol, "DIAMOND") == 0)
-		((card_t *)(card->data))->symbol = 1;
+		card.symbol = 1;
 	else if (strcmp(symbol, "CLUB") == 0)
-		((card_t *)(card->data))->symbol = 0;
+		card.symbol = 0;
 	else
-	   ((card_t *)(card->data))->value = 15;
+	   card.value = 15;
 
 	return card;
 }
@@ -82,47 +110,22 @@ add_deck(doubly_linked_list_t *pack)
 		return pack;
 	}
 
-	dll_node_t *new_deck = new_node(sizeof(doubly_linked_list_t));
-	free(new_deck->data);
-	new_deck->data = dll_create(sizeof(card_t));
+	doubly_linked_list_t *new_deck = dll_create(sizeof(card_t));
 
-	dll_node_t *card = new_node(sizeof(card_t));
-	((doubly_linked_list_t *)(new_deck->data))->size = 0;
-
-	card = get_card_value(card);
-	while (((card_t *)(card->data))->value == 15) {
-		card = get_card_value(card);
-		printf("The provided card is not a valid one.\n");
-	}
-	++(((doubly_linked_list_t *)(new_deck->data))->size);
-	((doubly_linked_list_t *)(new_deck->data))->head = card;
-
-	for (uint i = 0; i < nr_cards - 1; ++i) {
-		dll_node_t *new_card = new_node(sizeof(card_t));
-		new_card = get_card_value(new_card);
-		while (((card_t *)(new_card->data))->value == 15) {
-			new_card = get_card_value(new_card);
+	card_t card;
+	for(uint i = 0; i < nr_cards; ++i) {
+		card = get_card_value();
+		while (card.value == 15) {
+			card = get_card_value();
 			printf("The provided card is not a valid one.\n");
 		}
 
-		card->next = new_card;
-		new_card->prev = card;
-
-		card = card->next;
-		((doubly_linked_list_t *)(new_deck->data))->size++;
+		dll_add_nth_node(new_deck, new_deck->size, (void *)&card);
 	}
 
-	if (pack->size == 0) {
-		pack->head = new_deck;
-	} else {
-		dll_node_t *deck = pack->head;
 
-		while (deck->next != NULL)
-			deck = deck->next;
-		deck->next = new_deck;
-		new_deck->prev = deck;
-	}
-	(pack->size)++;
+	dll_add_nth_node(pack, pack->size, new_deck);
+	free(new_deck);
 
 	printf("The deck was successfully created with %d cards.\n", nr_cards);
 	return pack;
@@ -211,23 +214,17 @@ add_cards(doubly_linked_list_t *pack)
 	doubly_linked_list_t *deck =
 		((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
 
-	dll_node_t *card = dll_get_nth_node(deck, deck->size - 1);
-
-	for (uint i = 0; i < nr_cards; ++i) {
-		dll_node_t *new_card = new_node(sizeof(card_t));
-		new_card = get_card_value(new_card);
-
-		while (((card_t *)(new_card->data))->value == 15) {
-			new_card = get_card_value(new_card);
+	card_t card;
+	for(uint i = 0; i < nr_cards; ++i) {
+		card = get_card_value();
+		while (card.value == 15) {
+			card = get_card_value();
 			printf("The provided card is not a valid one.\n");
 		}
 
-		card->next = new_card;
-		new_card->prev = card;
-
-		card = card->next;
-		(deck->size)++;
+		dll_add_nth_node(deck, deck->size, (void *)&card);
 	}
+
 	printf("The cards were successfully added to deck %d.\n", deck_index);
 }
 
