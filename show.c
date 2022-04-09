@@ -41,8 +41,10 @@ show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif)
 
     printf("Deck %d:\n", deck_index);
     while (card != NULL) {
-        printf("\t%d ", ((card_t *)card->data)->value);
-        print_symbol(((card_t *)card->data)->symbol);
+        if(card->data != NULL) {
+            printf("\t%d ", ((card_t *)card->data)->value);
+            print_symbol(((card_t *)card->data)->symbol);
+        }
 
         card = card->next;
     }

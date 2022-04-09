@@ -70,6 +70,8 @@ get_card_value(dll_node_t *card)
 	return card;
 }
 
+
+
 doubly_linked_list_t *
 add_deck(doubly_linked_list_t *pack)
 {
@@ -118,6 +120,7 @@ add_deck(doubly_linked_list_t *pack)
 		while (deck->next != NULL)
 			deck = deck->next;
 		deck->next = new_deck;
+		new_deck->prev = deck;
 	}
 	(pack->size)++;
 

@@ -162,7 +162,7 @@ split_deck(doubly_linked_list_t *pack)
         return;
     }
 
-    if (deck_index >= pack->size) {
+    if (deck_index >= pack->size || deck_index < 0) {
         printf("The provided index is out of bounds for the deck list.\n");
         return;
     }
@@ -175,7 +175,7 @@ split_deck(doubly_linked_list_t *pack)
 
 	dll_node_t *deck = dll_get_nth_node(pack, deck_index);
 
-	if(split_index >= ((doubly_linked_list_t *)deck->data)->size) {
+	if(split_index >= ((doubly_linked_list_t *)deck->data)->size || split_index < 0) {
 		printf("The provided index is out of bounds for deck %d.\n", deck_index);
 		return;
 	}
@@ -196,8 +196,13 @@ split_deck(doubly_linked_list_t *pack)
 
 	dll_node_t *card =
 		dll_get_nth_node((doubly_linked_list_t *)(deck->data), split_index);
-	card->prev->next = NULL;
-	card->prev = NULL;
+	if(card != NULL) {
+		if(card->prev != NULL)
+			card->prev->next = NULL;
+
+		card->prev = NULL;
+	}
+
 	((doubly_linked_list_t *)(new_deck->data))->head = card;
 	((doubly_linked_list_t *)(new_deck->data))->size =
         ((doubly_linked_list_t *)(deck->data))->size - split_index;

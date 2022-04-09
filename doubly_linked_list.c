@@ -82,7 +82,7 @@ dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* data)
 dll_node_t *
 dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 {
-	dll_node_t *node, *prev;
+	dll_node_t *node;
 
 	if (!list || !list->head) {
 		return NULL;
@@ -93,19 +93,16 @@ dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 		n = list->size - 1;
 	}
 
-	node = list->head;
-	prev = NULL;
-	while (n > 0 && node->next != NULL) {
-		prev = node;
-		node = node->next;
-		--n;
-	}
-
-	if (prev == NULL) {
-		/* Adica n == 0. */
+	node = dll_get_nth_node(list, n);
+	
+	if(n == 0) {
 		list->head = node->next;
+		node->next->prev == NULL;
 	} else {
-		prev->next = node->next;
+		if(node->prev != NULL)
+			node->prev->next = node->next;
+		if(node->next != NULL)
+    		node->next->prev = node->prev;
 	}
 
 	list->size--;
