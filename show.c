@@ -7,6 +7,7 @@
 
 #define uint unsigned int
 
+// displays the corresponding symbol
 void
 print_symbol(char c)
 {
@@ -20,9 +21,11 @@ print_symbol(char c)
         printf("HEART\n");
 }
 
+// display the given deck
 void
 show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif)
 {
+    // verif == 1 if the function is called from show_all
     if (verif == 0) {
         uint buff;
         if (validate_command(1, &deck_index, &buff) == 0) {
@@ -39,6 +42,7 @@ show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif)
     dll_node_t *deck = dll_get_nth_node(pack, deck_index);
     dll_node_t *card = ((doubly_linked_list_t *)(deck->data))->head;
 
+    // print the values
     printf("Deck %d:\n", deck_index);
     while (card != NULL) {
         if (card->data != NULL) {
@@ -50,6 +54,7 @@ show_deck(doubly_linked_list_t *pack, uint deck_index, uint verif)
     }
 }
 
+// display all decks
 void
 show_all(doubly_linked_list_t *pack)
 {

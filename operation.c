@@ -10,6 +10,7 @@
 void
 shuffle_deck(doubly_linked_list_t *pack)
 {
+	// check if the command is valid
 	uint deck_index, buff;
 	if (validate_command(1, &deck_index, &buff) == 0) {
         printf("Invalid command. Please try again.\n");
@@ -29,6 +30,7 @@ shuffle_deck(doubly_linked_list_t *pack)
 		return;
 	}
 
+	// move the second half of the deck to the beginning
 	dll_node_t *node = deck->head;
 	dll_node_t *tail = dll_get_nth_node(deck, deck->size);
 	uint mid = deck->size / 2 - 1;
@@ -47,6 +49,7 @@ shuffle_deck(doubly_linked_list_t *pack)
 void
 reverse_deck(doubly_linked_list_t *pack)
 {
+	// check if the command is valid
 	uint deck_index, buff;
 	if (validate_command(1, &deck_index, &buff) == 0) {
         printf("Invalid command. Please try again.\n");
@@ -61,6 +64,7 @@ reverse_deck(doubly_linked_list_t *pack)
 	doubly_linked_list_t *deck =
 	    ((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
 
+	// move one node at a time until the list is reversed
 	if (deck->size >= 2) {
 		for (uint i = 1; i < deck->size; ++i)
 			dll_move_last(deck, deck->size - 1 - i);
@@ -83,6 +87,7 @@ merge_decks(doubly_linked_list_t *pack)
         return;
     }
 
+	// remove the initial decks from the pack
 	dll_node_t *deck1 = dll_remove_nth_node(pack, deck_index1);
 	dll_node_t *deck2;
 
@@ -91,11 +96,13 @@ merge_decks(doubly_linked_list_t *pack)
 	else
 		deck2 = dll_remove_nth_node(pack, deck_index2);
 
+	// create the new deck
 	doubly_linked_list_t *new_deck = dll_create(sizeof(card_t));
 
     dll_node_t *card1 = ((doubly_linked_list_t *)(deck1->data))->head;
     dll_node_t *card2 = ((doubly_linked_list_t *)(deck2->data))->head;
 
+	// merge the two decks
 	while (card1 || card2) {
 		if (card1 != NULL) {
 			dll_add_nth_node(new_deck, new_deck->size, card1->data);
@@ -108,6 +115,7 @@ merge_decks(doubly_linked_list_t *pack)
 		}
 	}
 
+	// free the used memory
 	dll_free_list((doubly_linked_list_t **)(&(deck1->data)));
 	free(deck1);
 
@@ -124,6 +132,7 @@ merge_decks(doubly_linked_list_t *pack)
 void
 deck_len(doubly_linked_list_t *pack)
 {
+	// check if the command is valid
 	uint deck_index, buff;
 	if (validate_command(1, &deck_index, &buff) == 0) {
         printf("Invalid command. Please try again.\n");
@@ -156,6 +165,7 @@ deck_number(doubly_linked_list_t *pack)
 void
 split_deck(doubly_linked_list_t *pack)
 {
+	// check if the command is valid
 	uint deck_index, split_index;
     if (validate_command(2, &deck_index, &split_index) == 0) {
         printf("Invalid command. Please try again.\n");
@@ -184,7 +194,8 @@ split_deck(doubly_linked_list_t *pack)
 	free(new_deck->data);
 	new_deck->data = dll_create(sizeof(card_t));
 
-    if (pack->size != deck_index + 1) {
+    // add the new deck in the pack
+	if (pack->size != deck_index + 1) {
         deck->next->prev = new_deck;
         new_deck->next = deck->next;
         deck->next = new_deck;
@@ -203,6 +214,7 @@ split_deck(doubly_linked_list_t *pack)
 		card->prev = NULL;
 	}
 
+	// set the new values for the list
 	((doubly_linked_list_t *)(new_deck->data))->head = card;
 	((doubly_linked_list_t *)(new_deck->data))->size =
         ((doubly_linked_list_t *)(deck->data))->size - split_index;
@@ -214,12 +226,14 @@ split_deck(doubly_linked_list_t *pack)
 		deck_index, split_index);
 }
 
+// swap 2 given cards
 void
 swap_cards(doubly_linked_list_t *deck, uint idx1, uint idx2)
 {
 	dll_node_t *node2 = dll_get_nth_node(deck, idx2);
 	dll_node_t *node1 = dll_get_nth_node(deck, idx1);
 
+	// copy the new data
 	card_t card1;
 	memcpy((void *)&card1, node1->data, sizeof(card_t));
 	card_t card2;
@@ -229,10 +243,10 @@ swap_cards(doubly_linked_list_t *deck, uint idx1, uint idx2)
 	memcpy(node1->data, (void *)&card2, sizeof(card_t));
 }
 
-
 void
 sort_deck(doubly_linked_list_t *pack)
 {
+	// check if the command is valid
 	uint deck_index, buff;
 	if (validate_command(1, &deck_index, &buff) == 0) {
         printf("Invalid command. Please try again.\n");
@@ -245,10 +259,10 @@ sort_deck(doubly_linked_list_t *pack)
     }
 
 	doubly_linked_list_t *deck =
-	((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
+		((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
 
 	if (deck->head == NULL)
-	return;
+		return;
 
 	dll_node_t *ii, *jj;
 
@@ -257,6 +271,7 @@ sort_deck(doubly_linked_list_t *pack)
 			ii = dll_get_nth_node(deck, i);
 			jj = dll_get_nth_node(deck, j);
 
+			// sort the deck by value, then by symbol
 			if (((card_t *)ii->data)->value > ((card_t *)jj->data)->value) {
 	        	swap_cards(deck, i, j);
 			} else if (((card_t *)ii->data)->value == ((card_t *)jj->data)->value) {
@@ -269,12 +284,14 @@ sort_deck(doubly_linked_list_t *pack)
 	printf("The deck %d was successfully sorted.\n", deck_index);
 }
 
+// free all the allocated memory
 void
 free_pack(doubly_linked_list_t **pack)
 {
 	dll_node_t *deck;
 
 	while ((*pack)->size > 0) {
+		// remove the node and free the memory
 		deck = dll_remove_nth_node(*pack, 0);
 		dll_free_list((doubly_linked_list_t **)(&(deck->data)));
 

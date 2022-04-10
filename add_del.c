@@ -7,6 +7,7 @@
 #define LEN_MAX 256
 #define uint unsigned int
 
+// check that the command is entered correctly
 int
 validate_command(uint nr_arg, uint *idx1, uint *idx2)
 {
@@ -15,6 +16,7 @@ validate_command(uint nr_arg, uint *idx1, uint *idx2)
 
 	line[strlen(line) - 1] = '\0';
 
+	// divides the line into arguments and checks their number
 	char *buff;
 	buff = strtok(line, " ");
 	if (buff == NULL) {
@@ -45,6 +47,7 @@ validate_command(uint nr_arg, uint *idx1, uint *idx2)
 	return 1;
 }
 
+// get the card values
 card_t
 get_card_value()
 {
@@ -57,6 +60,7 @@ get_card_value()
 
 	line[strlen(line) - 1] = '\0';
 
+	// read the attributes of the card and see if they are correct
 	char *buff;
 	buff = strtok(line, " ");
 	if(buff == NULL) {
@@ -84,6 +88,7 @@ get_card_value()
 
 	card.value = (uint)value;
 
+	// give each symbol the corresponding number
 	if (strcmp(symbol, "HEART") == 0)
 		card.symbol = 0;
 	else if (strcmp(symbol, "SPADE") == 0)
@@ -98,8 +103,7 @@ get_card_value()
 	return card;
 }
 
-
-
+// add a deck at the end of the package
 doubly_linked_list_t *
 add_deck(doubly_linked_list_t *pack)
 {
@@ -112,6 +116,7 @@ add_deck(doubly_linked_list_t *pack)
 
 	doubly_linked_list_t *new_deck = dll_create(sizeof(card_t));
 
+	// adds cards to the package
 	card_t card;
 	for(uint i = 0; i < nr_cards; ++i) {
 		card = get_card_value();
@@ -124,6 +129,7 @@ add_deck(doubly_linked_list_t *pack)
 	}
 
 
+	// adds deck to the package
 	dll_add_nth_node(pack, pack->size, new_deck);
 	free(new_deck);
 
@@ -131,6 +137,8 @@ add_deck(doubly_linked_list_t *pack)
 	return pack;
 }
 
+/* deletes a deck from the pack
+verif == 1 if the function is called from del_card */
 void
 del_deck(doubly_linked_list_t *pack, uint verif, uint deck_index)
 {
@@ -147,6 +155,7 @@ del_deck(doubly_linked_list_t *pack, uint verif, uint deck_index)
 		}
 	}
 
+	// the deck is removed from the pack and the freed
 	dll_node_t *deck = dll_remove_nth_node(pack, deck_index);
 
 	if(deck != NULL && deck->data != NULL) {
@@ -160,9 +169,11 @@ del_deck(doubly_linked_list_t *pack, uint verif, uint deck_index)
 		printf("The deck %d was successfully deleted.\n", deck_index);
 }
 
+// delete a card from a specified package
 void
 del_card(doubly_linked_list_t *pack)
 {
+	// read the command and check if the index is out of bounds
 	uint deck_index, card_index;
 	if (validate_command(2, &deck_index, &card_index) == 0) {
 		printf("Invalid command. Please try again.\n");
@@ -182,9 +193,11 @@ del_card(doubly_linked_list_t *pack)
 		return;
 	}
 
+	// if the deck has only one item, it is deleted
 	if (deck->size == 1) {
 		del_deck(pack, 1, deck_index);
 	} else {
+		// remove the card and free the memory
 		dll_node_t *card = dll_remove_nth_node(deck, card_index);
 
 		if(card != NULL) {
@@ -197,9 +210,11 @@ del_card(doubly_linked_list_t *pack)
 	printf("The card was successfully deleted from deck %d.\n", deck_index);
 }
 
+// add cards to a specific package
 void
 add_cards(doubly_linked_list_t *pack)
 {
+	// read the command and check if the index is out of bounds
 	uint deck_index, nr_cards;
 	if (validate_command(2, &deck_index, &nr_cards) == 0) {
 		printf("Invalid command. Please try again.\n");
@@ -214,6 +229,7 @@ add_cards(doubly_linked_list_t *pack)
 	doubly_linked_list_t *deck =
 		((doubly_linked_list_t *)(dll_get_nth_node(pack, deck_index)->data));
 
+	// read the cards and see if they are valid
 	card_t card;
 	for(uint i = 0; i < nr_cards; ++i) {
 		card = get_card_value();
