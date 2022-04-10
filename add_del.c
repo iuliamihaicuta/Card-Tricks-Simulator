@@ -85,13 +85,13 @@ get_card_value()
 	card.value = (uint)value;
 
 	if (strcmp(symbol, "HEART") == 0)
-		card.symbol = 3;
-	else if (strcmp(symbol, "SPADE") == 0)
-		card.symbol = 2;
-	else if (strcmp(symbol, "DIAMOND") == 0)
-		card.symbol = 1;
-	else if (strcmp(symbol, "CLUB") == 0)
 		card.symbol = 0;
+	else if (strcmp(symbol, "SPADE") == 0)
+		card.symbol = 1;
+	else if (strcmp(symbol, "DIAMOND") == 0)
+		card.symbol = 2;
+	else if (strcmp(symbol, "CLUB") == 0)
+		card.symbol = 3;
 	else
 	   card.value = 15;
 

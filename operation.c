@@ -217,23 +217,18 @@ split_deck(doubly_linked_list_t *pack)
 void
 swap_cards(doubly_linked_list_t *deck, uint idx1, uint idx2)
 {
-	dll_node_t *node2 = dll_remove_nth_node(deck, idx2);
+	dll_node_t *node2 = dll_get_nth_node(deck, idx2);
+	dll_node_t *node1 = dll_get_nth_node(deck, idx1);
 
-	card_t card;
-	memcpy((void *)&card, node2->data, sizeof(card_t));
+	card_t card1;
+	memcpy((void *)&card1, node1->data, sizeof(card_t));
+	card_t card2;
+	memcpy((void *)&card2, node2->data, sizeof(card_t));
 
-	dll_node_t *node1 = dll_remove_nth_node(deck, idx1);
-	dll_add_nth_node(deck, idx1, (void *)&card);
-
-	memcpy((void *)&card, node1->data, sizeof(card_t));
-	dll_add_nth_node(deck, idx2, (void *)&card);
-
-	free(node1->data);
-	free(node1);
-
-	free(node2->data);
-	free(node2);
+	memcpy(node2->data, (void *)&card1, sizeof(card_t));
+	memcpy(node1->data, (void *)&card2, sizeof(card_t));
 }
+
 
 void
 sort_deck(doubly_linked_list_t *pack)
@@ -255,31 +250,20 @@ sort_deck(doubly_linked_list_t *pack)
 	if (deck->head == NULL)
 	return;
 
-	dll_node_t *i, *j;
-	uint ii = 0, jj;
+	dll_node_t *ii, *jj;
 
-	for (i = deck->head; i->next != NULL; i = i->next) {
-		jj = ii;
-        for (j = i->next; j != NULL; j = j->next) {
-            if (((card_t *)i->data)->symbol > ((card_t *)j->data)->symbol) {
-                swap_cards(deck, ii, jj);
-            }
-			printf("%d %d\n", ii, jj);
-			++jj;
-        }
-		++ii;
-	}
+	for (uint i = 0; i < deck->size - 1; ++i) {
+		for (uint j = i + 1; j < deck->size; ++j) {
+			ii = dll_get_nth_node(deck, i);
+			jj = dll_get_nth_node(deck, j);
 
-	ii = 0;
-	for (i = deck->head; i->next != NULL; i = i->next) {
-		jj = ii;
-	    for (j = i->next; j != NULL; j = j->next) {
-	        if (((card_t *)i->data)->value > ((card_t *)j->data)->value) {
-	            swap_cards(deck, ii, jj);
-	        }
-			++jj;
-	    }
-		++ii;
+			if (((card_t *)ii->data)->value > ((card_t *)jj->data)->value) {
+	        	swap_cards(deck, i, j);
+			} else if (((card_t *)ii->data)->value == ((card_t *)jj->data)->value) {
+				if (((card_t *)ii->data)->symbol > ((card_t *)jj->data)->symbol)
+					swap_cards(deck, i, j);
+			}
+		}
 	}
 
 	printf("The deck %d was successfully sorted.\n", deck_index);
