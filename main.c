@@ -55,6 +55,7 @@ int main()
         }
     }
 
+    // frees up all allocated memory
     free_pack(&pack);
 
     return 0;

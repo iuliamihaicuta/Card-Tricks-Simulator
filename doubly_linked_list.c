@@ -6,6 +6,7 @@
 
 #define uint unsigned int
 
+// allocate memory for a node
 dll_node_t*
 new_node(uint data_size)
 {
@@ -19,6 +20,7 @@ new_node(uint data_size)
 	return node;
 }
 
+// create a doubly linked list
 doubly_linked_list_t*
 dll_create(uint data_size)
 {
@@ -32,6 +34,7 @@ dll_create(uint data_size)
 	return list;
 }
 
+// returns a given node
 dll_node_t *
 dll_get_nth_node(doubly_linked_list_t *l, uint n)
 {
@@ -48,18 +51,21 @@ dll_get_nth_node(doubly_linked_list_t *l, uint n)
 	return tmp;
 }
 
+// add a node to the list
 void
 dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* data)
 {
 	if ( n > list->size)
 		n = list->size;
 
+	// create the new node and save the data
 	dll_node_t *node = new_node(list->data_size);
 	memcpy(node->data, data, list->data_size);
 
 	if (list->size == 0) {
 		list->head = node;
 	} else if (n == 0) {
+		// set the node as the list->head if n == 0
 		node->next = list->head;
 		list->head->prev = node;
 		list->head = node;
@@ -76,6 +82,7 @@ dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* data)
 	(list->size)++;
 }
 
+// remove the node from the list
 dll_node_t *
 dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 {
@@ -93,6 +100,7 @@ dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 	node = dll_get_nth_node(list, n);
 
 	if(n == 0) {
+		// change the list->head if n == 0
 		list->head = node->next;
 		if(node->next != NULL)
 			node->next->prev = NULL;
@@ -108,6 +116,7 @@ dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
 	return node;
 }
 
+// move a node at the end of the list
 void
 dll_move_last(doubly_linked_list_t* list, uint n)
 {
@@ -121,6 +130,7 @@ dll_move_last(doubly_linked_list_t* list, uint n)
 	(list->size)++;
 }
 
+// free a doubly linked list
 void
 dll_free_list(doubly_linked_list_t** pp_list)
 {
@@ -130,6 +140,7 @@ dll_free_list(doubly_linked_list_t** pp_list)
 		return;
 	}
 
+	// remove the nodes and free up the used memory
 	while ((*pp_list)->size > 0) {
 		node = dll_remove_nth_node(*pp_list, 0);
 		if (node != NULL) {
@@ -144,6 +155,7 @@ dll_free_list(doubly_linked_list_t** pp_list)
 		}
 	}
 
+	// free the list
 	free(*pp_list);
 	*pp_list = NULL;
 }
