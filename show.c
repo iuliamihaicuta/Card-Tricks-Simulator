@@ -10,11 +10,11 @@
 void
 print_symbol(char c)
 {
-    if (c == 0)
+    if (c == 3)
         printf("CLUB\n");
-    else if (c == 1)
-        printf("DIAMOND\n");
     else if (c == 2)
+        printf("DIAMOND\n");
+    else if (c == 1)
         printf("SPADE\n");
     else
         printf("HEART\n");
