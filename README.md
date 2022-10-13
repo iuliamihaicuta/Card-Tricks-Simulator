@@ -58,5 +58,5 @@ folosite de program
 
 ### Comentarii asupra temei
 
-* Se pot adauga anumite verificari folosite in programarea defensiza, pentru a
+* Se pot adauga anumite verificari folosite in programarea defensiva, pentru a
 asigura a buna functionare a programului
